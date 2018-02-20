@@ -114,6 +114,7 @@ class Latest extends Component {
     episodes: [],
     loading: false
   }
+  scrollNode = null;
   componentDidMount() {
     this.fetchEpisodes();
   }
@@ -130,44 +131,46 @@ class Latest extends Component {
     })
   }
   scrollTop() {
-    window.scroll(0, 0);
+    this.scrollNode.scrollTop = 0;
   }
   render() { 
     return (
-      <div className="container">
-        <p style={{textAlign: 'center'}}>Capitulos de anime en streaming desde torrents de HorribleSubs</p>
-        <Title>
-          <h2>Ultimos Capitulos</h2>
-          <p>Mostrando {this.state.episodes.length} resultados</p>
-        </Title>
-        <List>
-          {this.state.episodes.map((ep, i) => (
-            <li key={i}>
-              <img src={ep.image} />
-              <div style={{padding: '10px'}}>
-                <p className="title">
-                  <a href="#">{ep.title}</a>
-                  <span>Ep. {ep.ep_number}</span>
-                </p>
-                <p>
-                  <i className="material-icons">event</i>
-                  <span>{ep.date}</span>
-                </p>
-                <a href="#">
-                  <i className="material-icons">play_arrow</i>
-                  Ver capitulo
-                </a>
-              </div> 
-            </li>
-          ))}
-        </List>
-        {this.state.loading && (<Spinner />)}
-        <Button onClick={() => this.fetchEpisodes(this.state.page + 1)}>
-          Cargar m&aacute;s
-        </Button>
-        <GoTopButton title="Volver arriba" onClick={this.scrollTop}>
-          <i className="material-icons">keyboard_arrow_up</i>
-        </GoTopButton>
+      <div className="center-column" ref={node => { this.scrollNode = node; }}>
+        <div className="container">
+          <p style={{textAlign: 'center'}}>Capitulos de anime en streaming desde torrents de HorribleSubs</p>
+          <Title>
+            <h2>Ultimos Capitulos</h2>
+            <p>Mostrando {this.state.episodes.length} resultados</p>
+          </Title>
+          <List>
+            {this.state.episodes.map((ep, i) => (
+              <li key={i}>
+                <img src={ep.image} />
+                <div style={{padding: '10px'}}>
+                  <p className="title">
+                    <a href="#">{ep.title}</a>
+                    <span>Ep. {ep.ep_number}</span>
+                  </p>
+                  <p>
+                    <i className="material-icons">event</i>
+                    <span>{ep.date}</span>
+                  </p>
+                  <a href="#">
+                    <i className="material-icons">play_arrow</i>
+                    Ver capitulo
+                  </a>
+                </div> 
+              </li>
+            ))}
+          </List>
+          {this.state.loading && (<Spinner />)}
+          <Button onClick={() => this.fetchEpisodes(this.state.page + 1)}>
+            Cargar m&aacute;s
+          </Button>
+          <GoTopButton title="Volver arriba" onClick={() => this.scrollTop()}>
+            <i className="material-icons">keyboard_arrow_up</i>
+          </GoTopButton>
+        </div>
       </div>
     );
   }

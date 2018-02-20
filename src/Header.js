@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 const Header = styled.header`
-  padding: 16px 12px;
+  padding: 16px 30px;
   color: white;
   display: flex;
   align-items: center;
@@ -45,7 +45,7 @@ class HeaderBar extends Component {
           <source src="http://perseus.shoutca.st:9253/64" type="audio/m4a" codecs="vorbis" />
           Your Browser doesn't support this audio format. Please update your browser or use another one
         </audio> */}
-        <Header className="container">
+        <Header>
           <h1>Dibujitos</h1>
           <div style={{flex: 1}}></div>
           <form className="search">
