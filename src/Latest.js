@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
+import Calendar from './Calendar';
 
 const endpoint = "https://hs.fuken.xyz";
 const List = styled.ul`
@@ -107,6 +108,17 @@ const GoTopButton = styled.button`
     box-shadow: 0px 5px 5px 1px rgba(0,0,0,0.2);
   }
 `;
+const Row = styled.main`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  .center-column {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 70px);
+  }
+`;
+
 
 class Latest extends Component {
   state = {
@@ -135,43 +147,46 @@ class Latest extends Component {
   }
   render() { 
     return (
-      <div className="center-column" ref={node => { this.scrollNode = node; }}>
-        <div className="container">
-          <p style={{textAlign: 'center'}}>Capitulos de anime en streaming desde torrents de HorribleSubs</p>
-          <Title>
-            <h2>Ultimos Capitulos</h2>
-            <p>Mostrando {this.state.episodes.length} resultados</p>
-          </Title>
-          <List>
-            {this.state.episodes.map((ep, i) => (
-              <li key={i}>
-                <img src={ep.image} />
-                <div style={{padding: '10px'}}>
-                  <p className="title">
-                    <a href="#">{ep.title}</a>
-                    <span>Ep. {ep.ep_number}</span>
-                  </p>
-                  <p>
-                    <i className="material-icons">event</i>
-                    <span>{ep.date}</span>
-                  </p>
-                  <a href="#">
-                    <i className="material-icons">play_arrow</i>
-                    Ver capitulo
-                  </a>
-                </div> 
-              </li>
-            ))}
-          </List>
-          {this.state.loading && (<Spinner />)}
-          <Button onClick={() => this.fetchEpisodes(this.state.page + 1)}>
-            Cargar m&aacute;s
-          </Button>
-          <GoTopButton title="Volver arriba" onClick={() => this.scrollTop()}>
-            <i className="material-icons">keyboard_arrow_up</i>
-          </GoTopButton>
+      <Row>
+        <div className="center-column" ref={node => { this.scrollNode = node; }}>
+          <div className="container">
+            <p style={{textAlign: 'center'}}>Capitulos de anime en streaming desde torrents de HorribleSubs</p>
+            <Title>
+              <h2>Ultimos Capitulos</h2>
+              <p>Mostrando {this.state.episodes.length} resultados</p>
+            </Title>
+            <List>
+              {this.state.episodes.map((ep, i) => (
+                <li key={i}>
+                  <img src={ep.image} />
+                  <div style={{padding: '10px'}}>
+                    <p className="title">
+                      <a href="#">{ep.title}</a>
+                      <span>Ep. {ep.ep_number}</span>
+                    </p>
+                    <p>
+                      <i className="material-icons">event</i>
+                      <span>{ep.date}</span>
+                    </p>
+                    <a href="#">
+                      <i className="material-icons">play_arrow</i>
+                      Ver capitulo
+                    </a>
+                  </div> 
+                </li>
+              ))}
+            </List>
+            {this.state.loading && (<Spinner />)}
+            <Button onClick={() => this.fetchEpisodes(this.state.page + 1)}>
+              Cargar m&aacute;s
+            </Button>
+            <GoTopButton title="Volver arriba" onClick={() => this.scrollTop()}>
+              <i className="material-icons">keyboard_arrow_up</i>
+            </GoTopButton>
+          </div>
         </div>
-      </div>
+        <Calendar />
+      </Row>
     );
   }
 }
