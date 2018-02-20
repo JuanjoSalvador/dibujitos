@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Header from './Header';
 import Latest from './Latest';
+import NotFound from './NotFound';
 
 class App extends Component {
   state = {
@@ -15,7 +17,12 @@ class App extends Component {
     return (
       <div>
         <Header />
-        <Latest />
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={Latest} />
+            <Route component={NotFound} />
+          </Switch>
+        </BrowserRouter>
       </div>
     );
   }

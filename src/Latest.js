@@ -79,9 +79,6 @@ const Button = styled.button`
   border: 1px solid white;
   cursor: pointer;
 `;
-const Loader = styled.div`
-  animation: rotate 1s linear infinite;
-`;
 const GoTopButton = styled.button`
   position: fixed;
   bottom: 20px;
