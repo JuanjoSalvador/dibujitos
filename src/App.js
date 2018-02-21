@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from './Header';
 import Latest from './Latest';
+import Details from './Details';
 import NotFound from './NotFound';
 
 class App extends Component {
@@ -19,7 +19,9 @@ class App extends Component {
         <Header />
         <BrowserRouter>
           <Switch>
-            <Route exact path="/" component={Latest} />
+            <Route exact path="/" render={() => (<Redirect to="/latest" />)} />
+            <Route path="/latest" component={Latest} />
+            <Route path="/shows/:slug" component={Details} />
             <Route component={NotFound} />
           </Switch>
         </BrowserRouter>

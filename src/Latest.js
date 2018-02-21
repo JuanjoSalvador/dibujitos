@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
 import Calendar from './Calendar';
+import { Link } from 'react-router-dom';
 
 const endpoint = "https://hs.fuken.xyz";
 const List = styled.ul`
@@ -158,17 +159,17 @@ class Latest extends Component {
                   <img src={ep.image} />
                   <div style={{padding: '10px'}}>
                     <p className="title">
-                      <a href="#">{ep.title}</a>
+                      <Link to={`/shows/${ep.slug}`}>{ep.title}</Link>
                       <span>Ep. {ep.ep_number}</span>
                     </p>
                     <p>
                       <i className="material-icons">event</i>
                       <span>{ep.date}</span>
                     </p>
-                    <a href="#">
+                    <Link to={`/shows/${ep.slug}?ep=${ep.ep_number}`}>
                       <i className="material-icons">play_arrow</i>
                       Ver capitulo
-                    </a>
+                    </Link>
                   </div> 
                 </li>
               ))}
