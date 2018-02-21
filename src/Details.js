@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
 import qs from 'qs';
@@ -65,7 +65,7 @@ class Details extends Component {
         <div className="wrapper">
           <h2>{this.state.show.title}</h2>
           <div className="show-info">
-            <img src={this.state.show.image_url} alt="Imagen del show"/>
+            <img src={this.state.show.image_url} alt="portada del show"/>
             <p className="description">{this.state.show.description}</p>
           </div>
           <List>

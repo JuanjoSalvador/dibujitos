@@ -156,7 +156,7 @@ class Latest extends Component {
             <List>
               {this.state.episodes.map((ep, i) => (
                 <li key={i}>
-                  <img src={ep.image} />
+                  <img src={ep.image} alt="portada del show" />
                   <div style={{padding: '10px'}}>
                     <p className="title">
                       <Link to={`/shows/${ep.slug}`}>{ep.title}</Link>
