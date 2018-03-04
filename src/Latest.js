@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Spinner from './Spinner';
 import Calendar from './Calendar';
 import { Link } from 'react-router-dom';
+import Button from './Button';
+import qs from 'qs';
 
 const endpoint = "https://hs.fuken.xyz";
 const List = styled.ul`
@@ -66,20 +68,6 @@ const Title = styled.div`
     margin-bottom: 25px;
   }
 `;
-const Button = styled.button`
-  display: block;
-  text-align: center;
-  background: var(--colorSecondary);
-  margin: 10px;
-  padding: 8px 12px;
-  color: #333;
-  margin: 0 auto;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  font-size: 16px;
-  border: 1px solid white;
-  cursor: pointer;
-`;
 const GoTopButton = styled.button`
   position: fixed;
   bottom: 20px;
@@ -113,7 +101,7 @@ const Row = styled.main`
   .center-column {
     flex: 1;
     overflow-y: auto;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - 56px);
   }
 `;
 
@@ -122,22 +110,36 @@ class Latest extends Component {
   state = {
     page: 0,
     episodes: [],
-    loading: false
+    loading: false,
+    search: null
   }
   scrollNode = null;
   componentDidMount() {
-    this.fetchEpisodes();
+    const query = this.getQueryString(this.props);
+    this.fetchEpisodes(this.state.page, query.search);
   }
-  fetchEpisodes(page = 0) {
-    this.setState({loading: true})
-    const url = `${endpoint}/episode/latest?page=${page}`;
+  componentWillReceiveProps(nextProps) {
+    const query = this.getQueryString(nextProps);
+    if(query.search !== this.state.search) {
+      this.fetchEpisodes(this.state.page, query.search);
+    }
+  }
+  getQueryString(props) {
+    return qs.parse(props.location.search.replace('?', ''));
+  }
+  fetchEpisodes(page = 0, search) {
+    this.setState({loading: true, search});
+    const url = search ? 
+        `${endpoint}/episode/search?page=${page}&q=${search}` 
+      : `${endpoint}/episode/latest?page=${page}`;
+    const prevEpisodes = search ? [] : this.state.episodes;
     window.fetch(url).then(res => res.json())
     .then(json => {
-      this.setState(state => ({
+      this.setState({
         page,
         loading: false,
-        episodes: state.episodes.concat(json)
-      }))
+        episodes: prevEpisodes.concat(json)
+      })
     })
   }
   scrollTop() {
@@ -150,13 +152,15 @@ class Latest extends Component {
           <div className="container">
             <p style={{textAlign: 'center'}}>Capitulos de anime en streaming desde torrents de HorribleSubs</p>
             <Title>
-              <h2>Ultimos Capitulos</h2>
+              <h2>{this.state.search ? 'Resultados de la búsqueda' : 'Ultimos Capitulos'}</h2>
               <p>Mostrando {this.state.episodes.length} resultados</p>
             </Title>
             <List>
               {this.state.episodes.map((ep, i) => (
                 <li key={i}>
-                  <img src={ep.image} alt="portada del show" />
+                  <Link to={`/shows/${ep.slug}`}>
+                    <img src={ep.image} alt="portada del show" />
+                  </Link>
                   <div style={{padding: '10px'}}>
                     <p className="title">
                       <Link to={`/shows/${ep.slug}`}>{ep.title}</Link>
@@ -175,7 +179,7 @@ class Latest extends Component {
               ))}
             </List>
             {this.state.loading && (<Spinner />)}
-            <Button onClick={() => this.fetchEpisodes(this.state.page + 1)}>
+            <Button center onClick={() => this.fetchEpisodes(this.state.page + 1)}>
               Cargar m&aacute;s
             </Button>
             <GoTopButton title="Volver arriba" onClick={() => this.scrollTop()}>

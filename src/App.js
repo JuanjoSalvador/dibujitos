@@ -15,17 +15,17 @@ class App extends Component {
   }
   render() {
     return (
-      <div>
-        <Header />
-        <BrowserRouter>
+      <BrowserRouter>
+        <div className="router-root">
+          <Header />
           <Switch>
             <Route exact path="/" render={() => (<Redirect to="/latest" />)} />
             <Route path="/latest" component={Latest} />
             <Route path="/shows/:slug" component={Details} />
             <Route component={NotFound} />
           </Switch>
-        </BrowserRouter>
-      </div>
+        </div>
+      </BrowserRouter>
     );
   }
 }

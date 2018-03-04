@@ -1,31 +1,41 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Link, withRouter } from 'react-router-dom';
 
 const Header = styled.header`
-  padding: 16px 30px;
+  padding: 10px 20px;
   color: white;
   display: flex;
   align-items: center;
+  background: var(--colorPrimaryDark);
   h1 {
     color: white;
     margin: 0;
-    font-weight: 500;
+    font-weight: 300;
+    font-size: 30px;
+    line-height: 36px;
   }
   input[name=search] {
     border: none;
     background: rgba(255,255,255, 0.2);
     padding: 8px;
-    line-height: 22px;
+    line-height: 20px;
     padding-left: 36px;
     border-radius: 6px;
     font-size: 16px;
     color: white;
     width: 100%;
+    outline: none;
+    &::placeholder {
+      color: white;
+      opacity: 0.5;
+    }
   }
   form {
     min-width: 36px;
     position: relative;
     margin-left: 10px;
+    flex-basis: 260px;
     .material-icons {
       position: absolute;
       left: 6px;
@@ -36,26 +46,36 @@ const Header = styled.header`
 `;
 
 class HeaderBar extends Component {
-  state = {  }
+  state = {
+    search: ''
+  }
+  submitSearch(ev) {
+    ev.preventDefault();
+    this.props.history.push(`/latest?search=${this.state.search}`);
+  }
   render() {
     return (
-      <div style={{background: 'var(--colorPrimaryDark)'}}>
+      <Header>
         {/* <audio controls style={{width: '100%'}}>
           <source src="http://perseus.shoutca.st:9253/stream" type="audio/mpeg" codecs="vorbis" />
           <source src="http://perseus.shoutca.st:9253/64" type="audio/m4a" codecs="vorbis" />
           Your Browser doesn't support this audio format. Please update your browser or use another one
         </audio> */}
-        <Header>
+        <Link to="/">
           <h1>Dibujitos</h1>
-          <div style={{flex: 1}}></div>
-          <form className="search">
-            <i onClick={() => this.toggleSearch()} className="material-icons">search</i>
-            <input type="search" name="search" /> 
-          </form>
-        </Header>
-      </div>
+        </Link>
+        <div style={{flex: 1}}></div>
+        <form className="search" onSubmit={ev => this.submitSearch(ev)}>
+          <i className="material-icons">search</i>
+          <input type="search" 
+                 name="search"
+                 placeholder="Buscar últimos capitulos"
+                 value={this.state.search}
+                 onChange={ev => this.setState({search: ev.target.value})} /> 
+        </form>
+      </Header>
     );
   }
 }
 
-export default HeaderBar;
+export default withRouter(HeaderBar);
