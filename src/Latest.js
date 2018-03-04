@@ -16,7 +16,7 @@ const List = styled.ul`
   flex-wrap: wrap;
   justify-content: center;
   li {
-    max-width: 240px;    
+    max-width: 240px;
     margin: 3px 5px;
     background: white;
     margin-bottom: 10px;
@@ -38,8 +38,8 @@ const List = styled.ul`
       border-width: 2px;
     }
     img {
-      max-width: 100%;
       height: 340px;
+      width: 240px;
       border-radius: 4px 4px 0 0;
     }
     p {

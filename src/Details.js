@@ -4,6 +4,7 @@ import Spinner from './Spinner';
 import Stars from './Stars';
 import qs from 'qs';
 import Button from './Button';
+import MagnetPlayer from './MagnetLoader';
 
 const Container = styled.main`
   overflow-y: auto;
@@ -71,6 +72,7 @@ class Details extends Component {
       episodes: []
     },
     selectedEpisode: null,
+    selectedMagnet: null,
     page: 0,
     pageHasNext: true
   }
@@ -137,6 +139,7 @@ class Details extends Component {
               {this.state.loadingEpisodes ? 'Cargando...' : 'Cargar más'}
             </Button>
           )}
+          <MagnetPlayer magent={this.state.selectedMagnet} />
         </div>
       </Container>
     )
