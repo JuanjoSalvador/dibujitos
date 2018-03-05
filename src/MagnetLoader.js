@@ -17,6 +17,7 @@ class MagnetLoader extends Component {
     loading: false,
     videoUrl: null
   }
+  torrentsPromise = null;
   torrents = [];
   socket = null;
   targetHash = null;
@@ -26,14 +27,15 @@ class MagnetLoader extends Component {
     this.socket.on('connect', () => {
       console.log("MagnetLoader: connected to Palomitas Downloader")
     })
-    this.socket.on('interested', (hash) => {
+    this.socket.on('finished', (hash) => {
       this.fetchTorrentFiles(hash)
       this.setState({loading: false})
     })
     this.socket.on('destroyed', (hash) => this.deleteTorrent(hash))
-    this.fetchTorrents()
+    this.socket.on('download', (hash, percent) => this.updateProgress(hash, percent))
+    this.torrentsPromise = this.fetchTorrents()
   }
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     this.setState({ videoUrl: '' })    
     if(!nextProps.magnet) {
       return;
@@ -41,12 +43,20 @@ class MagnetLoader extends Component {
 
     const hash = parseMagnet(nextProps.magnet).infoHash;
     this.targetHash = hash;
+    await this.torrentsPromise;
+
     if(this.isTorrentInServer(hash)) {
       this.fetchTorrentFiles(hash);
     } else {
       this.setState({loading: true})
       this.postTorrent(nextProps.magnet);
     }
+  }
+  updateProgress(hash, percent) {
+    if(this.targetHash !== hash) {
+      return;
+    }
+    this.setState({ loadingPercent: parseFloat(percent).toFixed(2) })
   }
 
   isTorrentInServer(hash) {
@@ -119,16 +129,35 @@ class MagnetLoader extends Component {
       return null;
     }
     if(!this.state.videoUrl) {
-      return <Spinner />
+      return (
+        <div>
+          <p>
+            Descargando capitulo al servidor de streaming. 
+            Por favor, espere.
+          </p>
+          <p style={{
+            padding: '2px',
+            textAlign: 'right',
+            background: `linear-gradient(
+              to right, 
+              #2fae39 0%,
+              #eee ${this.state.loadingPercent}%
+            )`
+          }}>{this.state.loadingPercent}%</p>
+          <Spinner />          
+        </div>
+      )
     }
     return (
       <div style={{margin: '1em 0'}}>
         <Player
           controls
-          style={{width: '100%', height: 'auto'}}
           src={this.state.videoUrl}
+          style={{width: '100%', height: 'auto'}}
           crossOrigin="anonymous">
           <BigPlayButton className="player-btn" position="center" />
+          <source src={this.state.videoUrl} type="video/x-matroska"/>
+          <source src={`${this.state.videoUrl}?ffmpeg=remux`} type="video/webm"/>
           <track
             default
             label="English"

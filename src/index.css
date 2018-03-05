@@ -9,6 +9,7 @@
   --colorSecondary: #ffca28;
   --colorSecondaryLight: #fffd61;
   --colorSecondaryDark: #c79a00;
+  --colorSecondaryDim: rgba(255,202,40, 0.5);
 }
 
 body {

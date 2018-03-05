@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Button = styled.button`
-  display: block;
+  display: ${props => props.center? 'block': 'inline-block'};
   text-align: center;
   background: var(--colorSecondary);
   margin: ${props => props.center? '10px auto' : '10px 0'};
