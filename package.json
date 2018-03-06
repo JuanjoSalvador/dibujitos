@@ -1,6 +1,6 @@
 {
-  "name": "dibujitos2",
-  "version": "0.1.0",
+  "name": "dibujitos",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "magnet-uri": "^5.1.7",
@@ -20,7 +20,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "npm run build && surge build dibujitos.fuken.xyz",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "surge": "^0.20.1"
   }
 }
