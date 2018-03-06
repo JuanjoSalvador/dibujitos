@@ -16,13 +16,27 @@ const Container = styled.main`
   }
   h2 {
     margin: 16px 0;
+    font-weight: 400;
+    @media (max-width: 600px) {
+      text-align: center;
+    }
   }
   .show-info {
     display: flex;
     align-items: flex-start;
+    @media (max-width: 600px) {
+      display: block;
+      img {
+        display: block;
+        margin: 0 auto;
+      }
+    }
     .description {
       flex: 1;
       margin: 16px;
+      @media (max-width: 600px) {
+        margin: 16px 0;
+      }
     }
   }
   .ep-list-top-bar {

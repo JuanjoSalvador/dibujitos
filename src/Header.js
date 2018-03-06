@@ -9,6 +9,9 @@ const Header = styled.header`
   align-items: center;
   background: var(--colorPrimaryDark);
   box-shadow: 0px 3px 8px 0 rgba(0,0,0, 0.3);
+  @media (max-width: 600px) {
+    padding: 10px;
+  }
   h1 {
     color: white;
     margin: 0;
