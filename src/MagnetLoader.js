@@ -155,8 +155,8 @@ class MagnetLoader extends Component {
           style={{width: '100%', height: 'auto'}}
           crossOrigin="anonymous">
           <BigPlayButton className="player-btn" position="center" />
-          <source src={this.state.videoUrl} type="video/mp4"/>
-          <source src={`${this.state.videoUrl}?ffmpeg=remux`} type="video/webm"/>
+          <source src={this.state.videoUrl} type='video/ogg; codecs="theora, vorbis"'/>
+          <source src={`${this.state.videoUrl}?ffmpeg=remux`} type="video/webm" />
           <track
             default
             label="English"
