@@ -36,7 +36,7 @@ class MagnetLoader extends Component {
     this.torrentsPromise = this.fetchTorrents()
   }
   async componentWillReceiveProps(nextProps) {
-    this.setState({ videoUrl: '' })    
+    this.setState({ videoUrl: '' })
     if(!nextProps.magnet) {
       return;
     }
@@ -132,19 +132,19 @@ class MagnetLoader extends Component {
       return (
         <div>
           <p>
-            Descargando capitulo al servidor de streaming. 
+            Descargando capitulo al servidor de streaming.
             Por favor, espere.
           </p>
           <p style={{
             padding: '2px',
             textAlign: 'right',
             background: `linear-gradient(
-              to right, 
+              to right,
               #2fae39 0%,
               #eee ${this.state.loadingPercent}%
             )`
           }}>{this.state.loadingPercent}%</p>
-          <Spinner />          
+          <Spinner />
         </div>
       )
     }
@@ -155,7 +155,7 @@ class MagnetLoader extends Component {
           style={{width: '100%', height: 'auto'}}
           crossOrigin="anonymous">
           <BigPlayButton className="player-btn" position="center" />
-          <source src={this.state.videoUrl} type='video/ogg; codecs="theora, vorbis"'/>
+          <source src={this.state.videoUrl} />
           <source src={`${this.state.videoUrl}?ffmpeg=remux`} type="video/webm" />
           <track
             default
@@ -166,13 +166,13 @@ class MagnetLoader extends Component {
           />
         </Player>
         <p>
-          <a download={filenames.video} 
+          <a download={filenames.video}
              href={this.state.videoUrl}>
             Descargar video
           </a>
         </p>
         <p>
-          <a download={filenames.subs} 
+          <a download={filenames.subs}
              href={`${this.state.videoUrl}?ffmpeg=subs`}>
             Descargar subtitulos
           </a>
