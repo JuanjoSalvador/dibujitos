@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
+import AuthWrapper from './AuthWrapper';
+import Gravatar from './Gravatar';
 
 const Header = styled.header`
   padding: 10px 20px;
@@ -77,6 +79,19 @@ class HeaderBar extends Component {
                  value={this.state.search}
                  onChange={ev => this.setState({search: ev.target.value})} /> 
         </form>
+        <AuthWrapper 
+          renderLoggedIn={profile => (
+            <Gravatar 
+              title={`Sesión iniciada como ${profile.email}`} 
+              hash={profile.mailhash} />
+          )}
+          renderLoggedOut={() => (
+            <Link style={{marginLeft: 10, color: 'white', opacity: 0.8}} to="/login">
+              Iniciar
+              <br />
+              Sesión
+            </Link>
+          )} />
       </Header>
     );
   }
