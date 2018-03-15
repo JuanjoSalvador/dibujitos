@@ -5,6 +5,7 @@ import Header from './Header';
 import Latest from './Latest';
 import Details from './Details';
 import NotFound from './NotFound';
+import Login from './Login';
 
 class App extends Component {
   state = {
@@ -22,6 +23,7 @@ class App extends Component {
             <Route exact path="/" render={() => (<Redirect to="/latest" />)} />
             <Route path="/latest" component={Latest} />
             <Route path="/shows/:slug" component={Details} />
+            <Route path="/login" component={Login} />
             <Route component={NotFound} />
           </Switch>
         </div>
