@@ -22,8 +22,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "pre-deploy": "cp build/index.html build/200.html",
     "build": "react-scripts build",
-    "deploy": "npm run build && surge build dibujitos.fuken.xyz",
+    "deploy": "npm run build && npm run copy && surge build dibujitos.fuken.xyz",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
