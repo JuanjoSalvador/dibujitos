@@ -5,10 +5,11 @@ import Stars from './Stars';
 import qs from 'qs';
 import Button from './Button';
 import MagnetPlayer from './MagnetLoader';
+import axios from './axios';
 
 const Container = styled.main`
   overflow-y: auto;
-  max-height: calc(100vh - 56px);
+  max-height: calc(100vh - 60px);
   .wrapper {
     max-width: 1024px;
     margin: 0 auto;
@@ -184,10 +185,18 @@ class Details extends Component {
       const selected = this.getQualityArray(episode)[0];
       magnet = selected.value;
     }
-    
+
     this.setState({
       selectedMagnet: magnet,
       selectedEpisode: episode
+    })
+
+    const slug = this.props.match.params.slug;
+    axios.post('/lastwatched', {
+      showid: slug,
+      subtitle: `Ep. ${episode.ep_number}`,
+      title: this.state.show.title,
+      image: this.state.show.image_url
     })
   }
   episodeIsSelected(episode) {

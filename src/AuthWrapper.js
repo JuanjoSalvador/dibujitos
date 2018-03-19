@@ -1,16 +1,20 @@
-const AuthWrapper = ({renderLoggedIn, renderLoggedOut}) => {
-  const token = localStorage.getItem('palomitas_token')
-  if(!token) {
+import React from 'react'
+import LoginReminder from './LoginReminder'
+import { connect } from 'react-redux'
+
+const defaultLoggedOut = () => (<LoginReminder />);
+const AuthWrapper = (props) => {
+  const renderLoggedOut = props.renderLoggedOut || defaultLoggedOut;
+  if (typeof props.renderLoggedIn !== 'function') {
+    throw new Error('AuthWrapper: renderLoggedIn prop must be a function');
+  }
+
+  const isExpired = new Date(props.exp * 1000) < new Date()  
+  if(!props.token || isExpired) {
     return renderLoggedOut()
   }
-  const tokendata = JSON.parse(localStorage.getItem('palomitas_tokendata'))
-  const isExpired = new Date(tokendata.exp * 1000) < new Date()
-  if (isExpired) {
-    return renderLoggedOut()
-  }
-  tokendata.mailhash = localStorage.getItem('palomitas_mailhash')
   
-  return renderLoggedIn(tokendata)
+  return props.renderLoggedIn({email: props.email, mailhash: props.mailhash})
 }
 
-export default AuthWrapper
+export default connect(state => state)(AuthWrapper)

@@ -1,15 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
-import md5 from 'md5';
+import { connect } from 'react-redux'
+import { actions } from './store'
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 100px);
+  margin-top: 20vh;
+  padding: 0 8px;
   width: 100vw;
   text-align: center;
+  opacity: ${props => props.loading ? 0.5 : 1};
+  p {
+    max-width: 600px;
+  }
   input {
     font-size: 14px;
     border: none;
@@ -29,28 +35,39 @@ const Form = styled.form`
       color: #AAA;
     }
   }
+  .loading {
+    opacity: 1;
+  }
 `;
 
 class Login extends React.Component {
+  state = {
+    loading: false
+  }
   componentDidMount() {
     if (window.location.hash) {
       const token = window.location.hash.replace('#t=', '')
-      const tokendata = atob(token.split('.')[1]);
-      localStorage.setItem('palomitas_mailhash', md5(JSON.parse(tokendata).email))
-      localStorage.setItem('palomitas_token', token)
-      localStorage.setItem('palomitas_tokendata', tokendata)
+      this.props.dispatch(actions.login(token));
       this.props.history.replace(`/latest`);      
     }
   }
   render() {
     return (
-      <Form method="GET" action="https://uc.palomitas.fun/auth">
-        <p>Para iniciar sesión o registrarte simplemente rellena este campo con tu email</p>
+      <Form 
+        loading={this.state.loading}
+        onSubmit={() => this.setState({loading: true})} 
+        method="GET" 
+        action="https://uc.palomitas.fun/auth">
+        <p>
+          Para iniciar sesión o registrarte simplemente rellena este campo con tu email
+          y recibirás un correo con un enlace de confirmación.
+        </p>
         <input type="hidden" name="callbackurl" value={`${window.location.protocol}//${window.location.host}/login`} />
         <input type="email" name="email" placeholder="you@domain.com" />
+        {this.state.loading && <p className="loading">Cargando...</p>}
       </Form>
     )
   }
 }
 
-export default Login;
+export default connect()(Login);

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import AuthWrapper from './AuthWrapper';
 import Gravatar from './Gravatar';
+import { connect } from 'react-redux';
+import { actions } from './store'
 
 const Header = styled.header`
   padding: 10px 20px;
@@ -49,6 +51,45 @@ const Header = styled.header`
       transform: translateY(-50%);
     }
   }
+  .profile {
+    position: relative;
+    img {
+      cursor: pointer;      
+    }
+    ul {
+      display: none;
+      list-style: none;
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      right: -10px;
+      top: 30px;
+      margin-top: 10px;
+      background: white;
+      color: #444;
+      text-align: right;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      z-index: 2;
+      li {
+        padding: 8px 16px;
+        & + li {
+          border-top: 1px solid #ccc;
+        }
+        &:first-child {
+          color: var(--colorPrimary);
+        }
+        &:last-child {
+          cursor: pointer;
+        }
+      }
+    }
+    &:focus, &:hover {
+      ul {
+        display: block;
+      }
+    }
+  }
 `;
 
 class HeaderBar extends Component {
@@ -58,18 +99,23 @@ class HeaderBar extends Component {
   submitSearch(ev) {
     ev.preventDefault();
     this.props.history.push(`/latest?search=${this.state.search}`);
+    this.setState({search: ''})
+  }
+  logout() {
+    this.props.dispatch(actions.logout())
   }
   render() {
     return (
       <Header>
-        {/* <audio controls style={{width: '100%'}}>
-          <source src="http://perseus.shoutca.st:9253/stream" type="audio/mpeg" codecs="vorbis" />
-          <source src="http://perseus.shoutca.st:9253/64" type="audio/m4a" codecs="vorbis" />
-          Your Browser doesn't support this audio format. Please update your browser or use another one
-        </audio> */}
-        <Link to="/">
-          <h1>Dibujitos</h1>
-        </Link>
+        {/* 
+          <audio>
+            <source src="http://perseus.shoutca.st:9253/stream" type="audio/mpeg" codecs="vorbis" />
+            <source src="http://perseus.shoutca.st:9253/64" type="audio/m4a" codecs="vorbis" />
+            Your Browser doesn't support this audio format. 
+            Please, <a href="https://browsehappy.com">update your browser</a>
+          </audio>
+        */}
+        <Link to="/"><h1>Dibujitos</h1></Link>
         <div style={{flex: 1}}></div>
         <form className="search" onSubmit={ev => this.submitSearch(ev)}>
           <i className="material-icons">search</i>
@@ -81,9 +127,13 @@ class HeaderBar extends Component {
         </form>
         <AuthWrapper 
           renderLoggedIn={profile => (
-            <Gravatar 
-              title={`Sesión iniciada como ${profile.email}`} 
-              hash={profile.mailhash} />
+            <div className="profile">
+              <Gravatar tabIndex={0} hash={profile.mailhash} />
+              <ul>
+                <li>{profile.email}</li>
+                <li onClick={() => this.logout()} tabIndex={0}>Cerrar sesión</li>
+              </ul>
+            </div>
           )}
           renderLoggedOut={() => (
             <Link style={{marginLeft: 10, color: 'white', opacity: 0.8}} to="/login">
@@ -97,4 +147,4 @@ class HeaderBar extends Component {
   }
 }
 
-export default withRouter(HeaderBar);
+export default withRouter(connect()(HeaderBar));

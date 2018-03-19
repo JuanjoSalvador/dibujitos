@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
 import Calendar from './Calendar';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 import qs from 'qs';
+import AuthWrapper from './AuthWrapper';
+import LastWatched from './LastWatched';
 
 const endpoint = "https://hs.fuken.xyz";
 const List = styled.ul`
@@ -101,7 +103,7 @@ const Row = styled.main`
   .center-column {
     flex: 1;
     overflow-y: auto;
-    max-height: calc(100vh - 56px);
+    max-height: calc(100vh - 60px);
   }
 `;
 
@@ -151,6 +153,14 @@ class Latest extends Component {
         <div className="center-column" ref={node => { this.scrollNode = node; }}>
           <div className="container">
             <p style={{textAlign: 'center'}}>Capitulos de anime en streaming desde torrents de HorribleSubs</p>
+            {this.state.search ? null : (
+              <Fragment>
+                <Title>
+                  <h2>Seguir viendo</h2>
+                </Title>
+                <AuthWrapper renderLoggedIn={() => (<LastWatched />)} />
+              </Fragment>
+            )}
             <Title>
               <h2>{this.state.search ? 'Resultados de la búsqueda' : 'Ultimos Capitulos'}</h2>
               <p>Mostrando {this.state.episodes.length} resultados</p>
