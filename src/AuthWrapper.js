@@ -17,4 +17,4 @@ const AuthWrapper = (props) => {
   return props.renderLoggedIn({email: props.email, mailhash: props.mailhash})
 }
 
-export default connect(state => state)(AuthWrapper)
+export default connect(state => state.auth)(AuthWrapper)

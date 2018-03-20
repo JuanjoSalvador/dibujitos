@@ -1,39 +1,14 @@
-import { createStore } from 'redux'
-import { JWT_KEY, getTokenData } from './auth.service'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import auth from './auth.reducer'
+import lastwatched from './lastwatched.reducer';
 
-// action creators
-export const actions = {
-  login: (token) => {
-    localStorage.setItem(JWT_KEY, token);
-    const tokenData = getTokenData(token);
-    return {
-      type: 'LOGIN',
-      payload: tokenData
-    };
-  },
-  logout: () => {
-    localStorage.removeItem(JWT_KEY)
-    return {
-      type: 'LOGOUT'
-    }
-  }
-}
-
-const storedToken = localStorage.getItem(JWT_KEY);
-const initialState = getTokenData(storedToken)
-
-// reducer
-const reducer = (state, action) => {
-  switch(action.type) {
-    case 'LOGIN':
-      return action.payload
-    case 'LOGOUT':
-      return {}
-    default:
-      return state
-  }
-}
-
-const store = createStore(reducer, initialState);
+const store = createStore(
+  combineReducers({
+    auth,
+    lastwatched
+  }),
+  applyMiddleware(thunk)
+);
 
 export default store;

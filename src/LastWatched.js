@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import axios from './axios'
 import Spinner from './Spinner'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
+import { actions } from './lastwatched.reducer';
 
 const NoData = styled.p`
   opacity: 0.5;
@@ -38,25 +39,14 @@ const List = styled.ul`
 `;
 
 class LastWatched extends Component {
-  state = {
-    shows: [],
-    loading: true
-  }
   componentDidMount() {
-    axios.get('/me').then(res => res.data)
-    .then(profile => {
-      this.setState({ 
-        loading: false,
-        shows: (profile.lastwatched || []).reverse()
-      })
-    })
+    this.props.dispatch(actions.fetch())
   }
   render() {
-    if (this.state.loading) {
-      return (<Spinner />);
-    }
-    if (this.state.shows.length === 0) {
-      return (
+    if (this.props.shows.length === 0) {
+      return this.props.loading ? (
+        <Spinner />
+      ) : (
         <NoData>
           Todavia no has visto ningun episodio
         </NoData>
@@ -64,7 +54,7 @@ class LastWatched extends Component {
     }
     return (
       <List>
-        {this.state.shows.map((show, i) => (
+        {this.props.shows.map((show, i) => (
           <li key={i}>
             <img src={show.image} alt="Portada del show" />
             <div className="title">
@@ -78,4 +68,4 @@ class LastWatched extends Component {
   }
 }
 
-export default LastWatched;
+export default connect(state => state.lastwatched)(LastWatched);

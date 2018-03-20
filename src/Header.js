@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import AuthWrapper from './AuthWrapper';
 import Gravatar from './Gravatar';
 import { connect } from 'react-redux';
-import { actions } from './store'
+import { actions } from './auth.reducer'
 
 const Header = styled.header`
   padding: 10px 20px;

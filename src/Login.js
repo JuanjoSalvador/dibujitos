@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { actions } from './store'
+import { actions } from './auth.reducer'
 
 const Form = styled.form`
   display: flex;

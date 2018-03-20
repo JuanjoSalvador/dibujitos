@@ -25,6 +25,8 @@ export function getTokenData(jwt) {
   const sections = jwt.split('.')
   const decoded = atob(sections[1])
   const data = JSON.parse(decoded)
+  data.email = data.sub;
+  delete data.sub;
   data.mailhash = md5(data.email);
   data.token = jwt;
   
