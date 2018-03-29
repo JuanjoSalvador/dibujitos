@@ -13,6 +13,7 @@ const Header = styled.header`
   align-items: center;
   background: var(--colorPrimaryDark);
   box-shadow: 0px 3px 8px 0 rgba(0,0,0, 0.3);
+  height: 60px;
   @media (max-width: 600px) {
     padding: 10px;
   }
@@ -136,10 +137,12 @@ class HeaderBar extends Component {
             </div>
           )}
           renderLoggedOut={() => (
-            <Link style={{marginLeft: 10, color: 'white', opacity: 0.8}} to="/login">
-              Iniciar
+            <Link title="Iniciar sesión" 
+              style={{fontSize: 12, textAlign: 'center', lineHeight: 1, color: 'white', marginLeft: 20, opacity: 0.8}}
+              to="/login">
+              <i className="material-icons">person_outline</i>
               <br />
-              Sesión
+              Login
             </Link>
           )} />
       </Header>
