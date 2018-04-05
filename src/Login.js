@@ -13,6 +13,7 @@ const Form = styled.form`
   width: 100vw;
   text-align: center;
   opacity: ${props => props.loading ? 0.5 : 1};
+  pointer-events: ${props => props.loading ? 'none' : 'all'}
   p {
     max-width: 600px;
   }
