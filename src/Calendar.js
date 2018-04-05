@@ -102,8 +102,8 @@ class Calendar extends Component {
           <List key={group.day}>
             <h3>{dayMap[group.day]}</h3>
             {group.animes.map(item => (
-              <li key={item.link}>
-                <a href={item.link}>{item.title}</a>
+              <li key={item.slug + group.day + item.time}>
+                <a href={item.slug}>{item.title}</a>
                 <p>{this.formatTime(item.time)}</p>
               </li>
             ))}
