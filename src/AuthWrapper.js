@@ -2,7 +2,7 @@ import React from 'react'
 import LoginReminder from './LoginReminder'
 import { connect } from 'react-redux'
 
-const defaultLoggedOut = () => (<LoginReminder />);
+const defaultLoggedOut = () => (<LoginReminder style={{marginLeft: 14}} />);
 const AuthWrapper = (props) => {
   const renderLoggedOut = props.renderLoggedOut || defaultLoggedOut;
   if (typeof props.renderLoggedIn !== 'function') {
@@ -17,4 +17,4 @@ const AuthWrapper = (props) => {
   return props.renderLoggedIn({email: props.email, mailhash: props.mailhash})
 }
 
-export default connect(state => state.auth)(AuthWrapper)
+export default connect(state => state.auth || {})(AuthWrapper)
