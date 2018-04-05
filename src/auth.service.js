@@ -32,3 +32,5 @@ export function getTokenData(jwt) {
   
   return data;
 }
+
+export default {getTokenData, tokenIsValid, JWT_KEY}

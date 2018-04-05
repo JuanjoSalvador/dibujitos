@@ -1,25 +1,25 @@
-import { JWT_KEY, getTokenData } from './auth.service'
+import authService from './auth.service'
 
 // action creators
 export const actions = {
   login: (token) => {
-    localStorage.setItem(JWT_KEY, token);
-    const tokenData = getTokenData(token);
+    localStorage.setItem(authService.JWT_KEY, token);
+    const tokenData = authService.getTokenData(token);
     return {
       type: 'LOGIN',
       payload: tokenData
     };
   },
   logout: () => {
-    localStorage.removeItem(JWT_KEY)
+    localStorage.removeItem(authService.JWT_KEY)
     return {
       type: 'LOGOUT'
     }
   }
 }
 
-const storedToken = localStorage.getItem(JWT_KEY);
-const initialState = getTokenData(storedToken)
+const storedToken = localStorage.getItem(authService.JWT_KEY);
+const initialState = authService.getTokenData(storedToken)
 
 // reducer
 const reducer = (state = initialState, action) => {
