@@ -28,6 +28,11 @@ const List = styled.ul`
       margin: 0;
     }
   }
+  .nodata {
+    margin-left: 20px;
+    margin-top: 5px;
+    opacity: 0.8;
+  }
 `;
 const Title = styled.header`
   padding: 0 20px;
@@ -101,6 +106,9 @@ class Calendar extends Component {
         {this.state.calendar.map(group => (
           <List key={group.day}>
             <h3>{dayMap[group.day]}</h3>
+            <p className="nodata">
+              {group.animes.length ? '' : 'Sin capítulos este día'}
+            </p>
             {group.animes.map(item => (
               <li key={item.slug + group.day + item.time}>
                 <a href={item.slug}>{item.title}</a>
