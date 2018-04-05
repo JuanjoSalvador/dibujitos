@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { actions } from './auth.reducer'
+import Spinner from './Spinner'
 
 const Form = styled.form`
   display: flex;
@@ -46,10 +47,10 @@ class Login extends React.Component {
     loading: false
   }
   componentDidMount() {
-    if (window.location.hash) {
-      const token = window.location.hash.replace('#t=', '')
+    if (window.location.search) {
+      const token = window.location.search.replace('?token=', '')
       this.props.dispatch(actions.login(token));
-      this.props.history.replace(`/latest`);      
+      this.props.history.push('/latest');
     }
   }
   render() {
@@ -65,7 +66,12 @@ class Login extends React.Component {
         </p>
         <input type="hidden" name="callbackurl" value={`${window.location.protocol}//${window.location.host}/login`} />
         <input type="email" name="email" placeholder="you@domain.com" />
-        {this.state.loading && <p className="loading">Cargando...</p>}
+        {this.state.loading && (
+          <Fragment>
+            <Spinner />
+            <p className="loading">Cargando...</p>
+          </Fragment>
+        )}
       </Form>
     )
   }
