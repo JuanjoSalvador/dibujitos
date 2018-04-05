@@ -8,7 +8,7 @@ import qs from 'qs';
 import AuthWrapper from './AuthWrapper';
 import LastWatched from './LastWatched';
 
-const endpoint = "https://hs.fuken.xyz";
+const endpoint = "https://nyapi.fuken.xyz";
 const List = styled.ul`
   padding: 0;
   margin: 0;
@@ -82,17 +82,21 @@ const GoTopButton = styled.button`
   cursor: pointer;
   width: 36px;
   height: 36px;
+  box-sizing: border-box;
   padding: 6px;
   border-radius: 18px;
   text-align: center;
   box-shadow: 0px 5px 10px 1px rgba(0,0,0,0.2);
   transition: all .3s;
+  outline: none;
+  border: 1px solid transparent;
 
   .material-icons {
     color: inherit;
     vertical-align: middle;    
   }
-  &:hover {
+  &:hover, &:focus {
+    border: 1px solid rgba(255,255,255, 0.5);
     box-shadow: 0px 5px 5px 1px rgba(0,0,0,0.2);
   }
 `;
@@ -131,9 +135,7 @@ class Latest extends Component {
   }
   fetchEpisodes(page = 0, search) {
     this.setState({loading: true, search});
-    const url = search ? 
-        `${endpoint}/episode/search?page=${page}&q=${search}` 
-      : `${endpoint}/episode/latest?page=${page}`;
+    const url = `${endpoint}/latest?page=${page}&q=${search || ''}`;
     const prevEpisodes = search ? [] : this.state.episodes;
     window.fetch(url).then(res => res.json())
     .then(json => {
@@ -146,6 +148,12 @@ class Latest extends Component {
   }
   scrollTop() {
     this.scrollNode.scrollTop = 0;
+  }
+  formatDate(ms) {
+    const date = new Date(ms);
+    const month = date.getMonth();
+    const day = date.getDate();
+    return `${day < 10 ? '0':''}${day}/${month < 10 ? '0':''}${month}`;
   }
   render() { 
     return (
@@ -169,18 +177,18 @@ class Latest extends Component {
               {this.state.episodes.map((ep, i) => (
                 <li key={i}>
                   <Link to={`/shows/${ep.slug}`}>
-                    <img src={ep.image} alt="portada del show" />
+                    <img src={ep.posterImage.small} alt="portada del show" />
                   </Link>
                   <div style={{padding: '10px'}}>
                     <p className="title">
-                      <Link to={`/shows/${ep.slug}`}>{ep.title}</Link>
-                      <span>Ep. {ep.ep_number}</span>
+                      <Link to={`/shows/${ep.slug}`}>{ep.showTitle}</Link>
+                      <span>Ep. {ep.episodeNumber}</span>
                     </p>
                     <p>
                       <i className="material-icons">event</i>
-                      <span>{ep.date}</span>
+                      <span>{this.formatDate(ep.episodeDate)}</span>
                     </p>
-                    <Link to={`/shows/${ep.slug}?ep=${ep.ep_number}`}>
+                    <Link to={`/shows/${ep.slug}?ep=${ep.episodeNumber}`}>
                       <i className="material-icons">play_arrow</i>
                       Ver capitulo
                     </Link>
