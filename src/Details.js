@@ -6,6 +6,7 @@ import qs from 'qs';
 import Button from './Button';
 import MagnetPlayer from './MagnetLoader';
 import axios from './axios';
+import moment from 'moment';
 
 const Container = styled.main`
   overflow-y: auto;
@@ -143,9 +144,9 @@ class Details extends Component {
   checkUrlForEpisode(props) {
     const query = this.getQueryString(props);
     const current_ep = this.state.selectedEpisode;
-    const current_ep_number = current_ep && parseInt(current_ep.ep_number);
+    const current_ep_number = current_ep && parseInt(current_ep.episodeNumber);
     if(parseInt(query.ep) !== current_ep_number) {
-      const foundEpisode = this.state.show.episodes.find(ep => parseInt(ep.ep_number) === parseInt(query.ep));
+      const foundEpisode = this.state.show.episodes.find(ep => parseInt(ep.episodeNumber) === parseInt(query.ep));
       if (foundEpisode) {
         this.selectEpisode(foundEpisode);
       }
@@ -158,18 +159,18 @@ class Details extends Component {
   fetchShow(page = 0) {
     this.setState({loadingEpisodes: true});
     const slug = this.props.match.params.slug;
-    const url = `https://hs.fuken.xyz/show/${slug}?page=${page}`;
+    const url = `https://nyapi.fuken.xyz/show/${slug}?page=${page}&meta=${page === 0}`;
     return window.fetch(url).then(res => res.json())
     .then(json => {
       const pageHasNext = json.episodes.length > 0;
-      json.episodes = this.state.show.episodes.concat(json.episodes);
+      json.episodes = this.state.show.episodes.concat(json.episodes.sort((a,b) => b.episodeNumber - a.episodeNumber));
       return new Promise(resolve => {
         this.setState({
           page, 
           pageHasNext,
           loadingShow: false, 
           loadingEpisodes: false,
-          show: json
+          show: {...this.state.show, ...json}
         }, resolve)
       })
     })
@@ -182,8 +183,7 @@ class Details extends Component {
   selectEpisode(episode, quality = '720p') {
     let magnet = episode.qualities[quality];
     if(!magnet) {
-      const selected = this.getQualityArray(episode)[0];
-      magnet = selected.value;
+      magnet = this.getQualityArray(episode)[0].value;
     }
 
     this.setState({
@@ -194,14 +194,18 @@ class Details extends Component {
     const slug = this.props.match.params.slug;
     axios.post('/lastwatched', {
       showid: slug,
-      subtitle: `Ep. ${episode.ep_number}`,
-      title: this.state.show.title,
-      image: this.state.show.image_url
+      subtitle: `Ep. ${episode.episodeNumber}`,
+      title: this.state.show.showTitle,
+      image: this.state.show.posterImage.small
     })
   }
   episodeIsSelected(episode) {
     return this.state.selectedEpisode 
-      && this.state.selectedEpisode.ep_number === episode.ep_number;
+      && this.state.selectedEpisode.episodeNumber === episode.episodeNumber;
+  }
+  formatEpisodeTitle(episode) {
+    const date = moment(episode.timestamp).format('DD/MM/YY');
+    return `(${date}) ${episode.showTitle} - ${episode.episodeNumber} `;
   }
   render() {
     if (this.state.loadingShow) {
@@ -212,9 +216,9 @@ class Details extends Component {
     return (
       <Container>
         <div className="wrapper">
-          <h2>{this.state.show.title}</h2>
+          <h2>{this.state.show.canonicalTitle}</h2>
           <section className="show-info">
-            <img src={this.state.show.image_url} alt="portada del show"/>
+            <img src={this.state.show.posterImage.small} alt="portada del show"/>
             <p className="description">{this.state.show.description}</p>
           </section>
           <section className="ep-list-top-bar">
@@ -228,11 +232,11 @@ class Details extends Component {
           </section>
           <List>
             {this.state.show.episodes.map(episode => (
-              <li tabIndex={0} key={episode.ep_number}
+              <li tabIndex={0} key={episode.episodeNumber}
                   className={this.episodeIsSelected(episode) ? 'selected' : ''}
                   onClick={() => this.selectEpisode(episode)}>
                 <i className="material-icons">play_arrow</i>
-                <p>{episode.full_title}</p>
+                <p>{this.formatEpisodeTitle(episode)}</p>
               </li>
             ))}
           </List>
