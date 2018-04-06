@@ -7,6 +7,7 @@ import Button from './Button';
 import qs from 'qs';
 import AuthWrapper from './AuthWrapper';
 import LastWatched from './LastWatched';
+import moment from 'moment';
 
 const endpoint = "https://nyapi.fuken.xyz";
 const List = styled.ul`
@@ -150,10 +151,7 @@ class Latest extends Component {
     this.scrollNode.scrollTop = 0;
   }
   formatDate(ms) {
-    const date = new Date(ms);
-    const month = date.getMonth();
-    const day = date.getDate();
-    return `${day < 10 ? '0':''}${day}/${month < 10 ? '0':''}${month}`;
+    return moment(ms).format('DD/MM');
   }
   render() { 
     return (
