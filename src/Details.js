@@ -177,17 +177,12 @@ class Details extends Component {
   }
   getQualityArray(episode) {
     return Object.keys(episode.qualities)
-      .map(key => ({key, value: episode.qualities[key]}))
-      .filter(q => q.value)
+      .map(key => ({key, ...episode.qualities[key]}))
   }
   selectEpisode(episode, quality = '720p') {
-    let magnet = episode.qualities[quality];
-    if(!magnet) {
-      magnet = this.getQualityArray(episode)[0].value;
-    }
-
+    let torrent = episode.qualities[quality] || this.getQualityArray(episode)[0];
     this.setState({
-      selectedMagnet: magnet,
+      selectedMagnet: torrent.magnet,
       selectedEpisode: episode
     })
 
@@ -197,6 +192,9 @@ class Details extends Component {
       subtitle: `Ep. ${episode.episodeNumber}`,
       title: this.state.show.showTitle,
       image: this.state.show.posterImage.small
+    }).catch(() => { 
+      // TODO: check if user is logged before posting to /lastwatched
+      console.error('failed adding episode to lastwatched');
     })
   }
   episodeIsSelected(episode) {
@@ -248,7 +246,7 @@ class Details extends Component {
           )}
           <BtnGroup>
             {qualities.map(quality => (
-              <Button disabled={quality.value === this.state.selectedMagnet} 
+              <Button disabled={quality.torrent === this.state.selectedMagnet} 
                       key={quality.key}>
                 {quality.key}
               </Button>
