@@ -118,6 +118,9 @@ const TitleRow = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-right: 14px;
+  @media (max-width: 600px) {
+    display: block;
+  }
 `;
 
 class Latest extends Component {

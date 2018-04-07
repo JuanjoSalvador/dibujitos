@@ -17,13 +17,6 @@ const Container = styled.main`
     margin: 0 auto;
     padding: 0 10px;
   }
-  h2 {
-    margin: 16px 0;
-    font-weight: 400;
-    @media (max-width: 600px) {
-      text-align: center;
-    }
-  }
   .show-info {
     display: flex;
     align-items: flex-start;
@@ -129,6 +122,13 @@ const TitleRow = styled.div`
   margin-left: 0;
   h2 {
     margin-bottom: 0;
+    font-weight: 400;
+  }
+  @media (max-width: 600px) {
+    display: block;
+    h2 {
+      text-align: center;
+    }
   }
 `;
 
