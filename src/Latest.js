@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
 import Calendar from './Calendar';
@@ -8,6 +8,7 @@ import qs from 'qs';
 import AuthWrapper from './AuthWrapper';
 import LastWatched from './LastWatched';
 import moment from 'moment';
+import Select from './Select';
 
 const endpoint = "https://nyapi.fuken.xyz";
 const List = styled.ul`
@@ -61,12 +62,12 @@ const List = styled.ul`
 `;
 const Title = styled.div`
   margin-left: 14px;
-  h2 {
+  > h2 {
     font-weight: normal;
     margin-top: 25px;
     margin-bottom: 5px;
   }
-  p {
+  > p {
     margin-top: 5px;
     margin-bottom: 25px;
   }
@@ -111,14 +112,20 @@ const Row = styled.main`
     max-height: calc(100vh - 60px);
   }
 `;
-
+const TitleRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 14px;
+`;
 
 class Latest extends Component {
   state = {
     page: 0,
     episodes: [],
     loading: false,
-    search: null
+    search: null,
+    source: 'py'
   }
   scrollNode = null;
   componentDidMount() {
@@ -134,10 +141,14 @@ class Latest extends Component {
   getQueryString(props) {
     return qs.parse(props.location.search.replace('?', ''));
   }
-  fetchEpisodes(page = 0, search) {
-    this.setState({loading: true, search});
-    const url = `${endpoint}/latest?page=${page}&q=${search || ''}`;
-    const prevEpisodes = search ? [] : this.state.episodes;
+  fetchEpisodes(page = 0, search, reset = !!search) {
+    this.setState({
+      loading: true, 
+      search,
+      episodes: reset ? [] : this.state.episodes
+    });
+    const url = `${endpoint}/latest?page=${page}&q=${search || ''}&source=${this.state.source || ''}`;
+    const prevEpisodes = reset ? [] : this.state.episodes;
     window.fetch(url).then(res => res.json())
     .then(json => {
       this.setState({
@@ -151,26 +162,41 @@ class Latest extends Component {
     this.scrollNode.scrollTop = 0;
   }
   formatDate(ms) {
-    return moment(ms).format('DD/MM');
+    return moment(ms).format('DD/MM - HH:mm');
   }
-  render() { 
+  onSelectSource = ev => {
+    const source = ev.target.value;
+    this.setState({source}, () => {
+      this.fetchEpisodes(0, this.state.search, true);
+    });
+  }
+  render() {
+    const selectOptions = [
+      {label: 'PuyaSubs - Español', value: 'py'},
+      {label: 'HorribleSubs - Inglés', value: 'hs'}
+    ]
     return (
       <Row>
         <div className="center-column" ref={node => { this.scrollNode = node; }}>
           <div className="container">
             <p style={{textAlign: 'center'}}>Capitulos de anime en streaming desde torrents de HorribleSubs</p>
             {this.state.search ? null : (
-              <Fragment>
-                <Title>
-                  <h2>Seguir viendo</h2>
-                </Title>
+              <Title>
+                <h2>Seguir viendo</h2>
                 <AuthWrapper renderLoggedIn={() => (<LastWatched />)} />
-              </Fragment>
+              </Title>
             )}
-            <Title>
-              <h2>{this.state.search ? 'Resultados de la búsqueda' : 'Ultimos Capitulos'}</h2>
-              <p>Mostrando {this.state.episodes.length} resultados</p>
-            </Title>
+            <TitleRow>
+              <Title>
+                <h2>{this.state.search ? 'Resultados de la búsqueda' : 'Ultimos Capitulos'}</h2>
+                <p>Mostrando {this.state.episodes.length} resultados</p>
+              </Title>
+              <Select 
+                label="Fuente" 
+                options={selectOptions}
+                value={this.state.source}
+                onChange={this.onSelectSource} />
+            </TitleRow>
             <List>
               {this.state.episodes.map((ep, i) => (
                 <li key={i}>
