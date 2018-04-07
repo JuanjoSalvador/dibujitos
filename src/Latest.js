@@ -69,7 +69,7 @@ const Title = styled.div`
   }
   > p {
     margin-top: 5px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
   }
 `;
 const GoTopButton = styled.button`
@@ -117,9 +117,12 @@ const TitleRow = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-right: 14px;
+  margin: 14px;
   @media (max-width: 600px) {
     display: block;
+  }
+  > div {
+    margin: 0;
   }
 `;
 
