@@ -122,6 +122,7 @@ const BtnGroup = styled.div`
 `;
 const TitleRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
   margin: 14px;

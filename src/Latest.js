@@ -114,6 +114,7 @@ const Row = styled.main`
 `;
 const TitleRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-right: 14px;
