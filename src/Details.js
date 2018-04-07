@@ -246,7 +246,7 @@ class Details extends Component {
           )}
           <BtnGroup>
             {qualities.map(quality => (
-              <Button disabled={quality.torrent === this.state.selectedMagnet} 
+              <Button disabled={quality.magnet === this.state.selectedMagnet} 
                       key={quality.key}>
                 {quality.key}
               </Button>
