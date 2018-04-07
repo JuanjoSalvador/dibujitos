@@ -7,6 +7,7 @@ import Button from './Button';
 import MagnetPlayer from './MagnetLoader';
 import axios from './axios';
 import moment from 'moment';
+import Select from './Select';
 
 const Container = styled.main`
   overflow-y: auto;
@@ -119,6 +120,16 @@ const BtnGroup = styled.div`
     }
   }
 `;
+const TitleRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 14px;
+  margin-left: 0;
+  h2 {
+    margin-bottom: 0;
+  }
+`;
 
 class Details extends Component {
   state = {
@@ -130,7 +141,8 @@ class Details extends Component {
     selectedEpisode: null,
     selectedMagnet: null,
     page: 0,
-    pageHasNext: true
+    pageHasNext: true,
+    source: 'py'
   }
   componentDidMount() {
     this.fetchShow().then(() => {
@@ -156,14 +168,16 @@ class Details extends Component {
   getQueryString(props) {
     return qs.parse(props.location.search.replace('?', ''));
   }
-  fetchShow(page = 0) {
+  fetchShow(page = 0, reset = false) {
     this.setState({loadingEpisodes: true});
     const slug = this.props.match.params.slug;
-    const url = `https://nyapi.fuken.xyz/show/${slug}?page=${page}&meta=${page === 0}`;
+    const url = `https://nyapi.fuken.xyz/show/${slug}?page=${page}&meta=${page === 0}&source=${this.state.source || ''}`;
     return window.fetch(url).then(res => res.json())
     .then(json => {
       const pageHasNext = json.episodes.length > 0;
-      json.episodes = this.state.show.episodes.concat(json.episodes.sort((a,b) => b.episodeNumber - a.episodeNumber));
+      const sortedEpisodes = json.episodes.sort((a,b) => b.episodeNumber - a.episodeNumber);
+      const concatSource = reset ? [] : this.state.show.episodes;
+      json.episodes = concatSource.concat(sortedEpisodes);
       return new Promise(resolve => {
         this.setState({
           page, 
@@ -205,16 +219,34 @@ class Details extends Component {
     const date = moment(episode.timestamp).format('DD/MM/YY');
     return `(${date}) ${episode.showTitle} - ${episode.episodeNumber} `;
   }
+  onSelectSource = ev => {
+    const source = ev.target.value;
+    this.setState({source}, () => {
+      this.fetchShow(0, true);
+    });
+  }
   render() {
     if (this.state.loadingShow) {
       return <Spinner />
     }
+    const selectOptions = [
+      {label: 'PuyaSubs - Español', value: 'py'},
+      {label: 'HorribleSubs - Inglés', value: 'hs'}
+    ]
     const qualities = this.state.selectedEpisode ? 
       this.getQualityArray(this.state.selectedEpisode) : [];
     return (
       <Container>
         <div className="wrapper">
-          <h2>{this.state.show.canonicalTitle}</h2>
+          <TitleRow>
+            <h2>{this.state.show.canonicalTitle}</h2>
+            <Select 
+              disabled={this.state.loading}
+              label="Fuente" 
+              options={selectOptions}
+              value={this.state.source}
+              onChange={this.onSelectSource} />
+          </TitleRow>
           <section className="show-info">
             <img src={this.state.show.posterImage.small} alt="portada del show"/>
             <p className="description">{this.state.show.description}</p>
