@@ -157,6 +157,9 @@ class Details extends Component {
     const query = this.getQueryString(props);
     const current_ep = this.state.selectedEpisode;
     const current_ep_number = current_ep && parseInt(current_ep.episodeNumber);
+    if(query.source === 'hs' || query.source === 'py') {
+      this.setState({source: query.source})
+    }
     if(parseInt(query.ep) !== current_ep_number) {
       const foundEpisode = this.state.show.episodes.find(ep => parseInt(ep.episodeNumber) === parseInt(query.ep));
       if (foundEpisode) {
