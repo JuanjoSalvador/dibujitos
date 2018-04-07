@@ -192,6 +192,7 @@ class Latest extends Component {
                 <p>Mostrando {this.state.episodes.length} resultados</p>
               </Title>
               <Select 
+                disabled={this.state.loading}
                 label="Fuente" 
                 options={selectOptions}
                 value={this.state.source}
