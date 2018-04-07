@@ -16,16 +16,24 @@ const Container = styled.main`
     max-width: 1024px;
     margin: 0 auto;
     padding: 0 10px;
+    > h2 {
+      margin-bottom: 10px;
+      font-weight: 400;
+      @media (max-width: 600px) {
+        text-align: center;
+      }
+    }
   }
   .show-info {
     display: flex;
     align-items: flex-start;
+    img {
+      margin: 10px auto;
+      margin-top: 0;
+      display: block;
+    }
     @media (max-width: 600px) {
       display: block;
-      img {
-        display: block;
-        margin: 0 auto;
-      }
     }
     .description {
       flex: 1;
@@ -110,24 +118,6 @@ const BtnGroup = styled.div`
     &:disabled {
       background: var(--colorPrimaryDark);
       color: white;
-    }
-  }
-`;
-const TitleRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin: 14px;
-  margin-left: 0;
-  h2 {
-    margin-bottom: 0;
-    font-weight: 400;
-  }
-  @media (max-width: 600px) {
-    display: block;
-    h2 {
-      text-align: center;
     }
   }
 `;
@@ -242,19 +232,17 @@ class Details extends Component {
     return (
       <Container>
         <div className="wrapper">
-          <TitleRow>
-            <h2>{this.state.show.canonicalTitle}</h2>
-            <Select 
+          <h2>{this.state.show.canonicalTitle}</h2>
+          <section className="show-info">
+            <img src={this.state.show.posterImage.small} alt="portada del show"/>
+            <p className="description">{this.state.show.description}</p>
+          </section>
+          <Select 
               disabled={this.state.loading}
               label="Fuente" 
               options={selectOptions}
               value={this.state.source}
               onChange={this.onSelectSource} />
-          </TitleRow>
-          <section className="show-info">
-            <img src={this.state.show.posterImage.small} alt="portada del show"/>
-            <p className="description">{this.state.show.description}</p>
-          </section>
           <section className="ep-list-top-bar">
             <Stars></Stars>
             <EpisodeSearch>
