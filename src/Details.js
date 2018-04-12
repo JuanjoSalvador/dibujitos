@@ -121,6 +121,10 @@ const BtnGroup = styled.div`
     }
   }
 `;
+const selectOptions = [
+  {label: 'HorribleSubs - Inglés', value: 'hs'},
+  {label: 'PuyaSubs - Español', value: 'py'}
+]
 
 class Details extends Component {
   state = {
@@ -223,10 +227,6 @@ class Details extends Component {
     if (this.state.loadingShow) {
       return <Spinner />
     }
-    const selectOptions = [
-      {label: 'PuyaSubs - Español', value: 'py'},
-      {label: 'HorribleSubs - Inglés', value: 'hs'}
-    ]
     const qualities = this.state.selectedEpisode ? 
       this.getQualityArray(this.state.selectedEpisode) : [];
     return (

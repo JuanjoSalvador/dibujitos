@@ -126,6 +126,11 @@ const TitleRow = styled.div`
   }
 `;
 
+const selectOptions = [
+  {label: 'HorribleSubs - Inglés', value: 'hs'},
+  {label: 'PuyaSubs - Español', value: 'py'}
+]
+
 class Latest extends Component {
   state = {
     page: 0,
@@ -178,10 +183,6 @@ class Latest extends Component {
     });
   }
   render() {
-    const selectOptions = [
-      {label: 'PuyaSubs - Español', value: 'py'},
-      {label: 'HorribleSubs - Inglés', value: 'hs'}
-    ]
     return (
       <Row>
         <div className="center-column" ref={node => { this.scrollNode = node; }}>
