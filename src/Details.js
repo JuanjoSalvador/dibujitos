@@ -133,7 +133,7 @@ class Details extends Component {
     selectedMagnet: null,
     page: 0,
     pageHasNext: true,
-    source: 'py'
+    source: 'hs'
   }
   componentDidMount() {
     this.fetchShow().then(() => {
