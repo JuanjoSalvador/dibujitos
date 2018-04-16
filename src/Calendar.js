@@ -47,10 +47,9 @@ const Title = styled.header`
 `;
 const Container = styled.div`
   min-width: 320px;
-  overflow-y: auto;
-  max-height: calc(100vh - 60px);
-  @media(max-width: 1090px) {
-    display: none;
+  @media (min-width: 600px) {
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
   }
 `;
 

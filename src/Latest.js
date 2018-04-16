@@ -103,13 +103,15 @@ const GoTopButton = styled.button`
   }
 `;
 const Row = styled.main`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  .center-column {
-    flex: 1;
-    overflow-y: auto;
-    max-height: calc(100vh - 60px);
+  @media (min-width: 600px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    .center-column {
+      flex: 1;
+      overflow-y: auto;
+      max-height: calc(100vh - 60px);
+    }
   }
 `;
 const TitleRow = styled.div`
