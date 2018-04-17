@@ -45,9 +45,9 @@ const Container = styled.main`
   }
   .ep-list-top-bar {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
-    margin-top: 10px;
+    margin: 10px 0;
   }
 `;
 const EpisodeSearch = styled.form`
@@ -167,14 +167,17 @@ class Details extends Component {
     return qs.parse(props.location.search.replace('?', ''));
   }
   fetchShow(page = 0, reset = false) {
-    this.setState({loadingEpisodes: true});
+    const concatSource = reset ? [] : this.state.show.episodes;    
+    this.setState({
+      loadingEpisodes: true,
+      show: {...this.state.show, episodes: concatSource}
+    });
     const slug = this.props.match.params.slug;
-    const url = `https://nyapi.fuken.xyz/show/${slug}?page=${page}&meta=${page === 0}&source=${this.state.source || ''}`;
+    const url = `https://nyapi.fuken.xyz/show/${slug}?page=${page}&meta=${page > 0 ? '' : 'true'}&source=${this.state.source || ''}`;
     return window.fetch(url).then(res => res.json())
     .then(json => {
       const pageHasNext = json.episodes.length > 0;
       const sortedEpisodes = json.episodes.sort((a,b) => b.episodeNumber - a.episodeNumber);
-      const concatSource = reset ? [] : this.state.show.episodes;
       json.episodes = concatSource.concat(sortedEpisodes);
       return new Promise(resolve => {
         this.setState({
@@ -237,14 +240,14 @@ class Details extends Component {
             <img src={this.state.show.posterImage.small} alt="portada del show"/>
             <p className="description">{this.state.show.description}</p>
           </section>
-          <Select 
+          <Stars></Stars>          
+          <section className="ep-list-top-bar">
+            <Select 
               disabled={this.state.loading}
               label="Fuente" 
               options={selectOptions}
               value={this.state.source}
               onChange={this.onSelectSource} />
-          <section className="ep-list-top-bar">
-            <Stars></Stars>
             <EpisodeSearch>
               <i className="material-icons">search</i>              
               <input type="search" placeholder="Buscar ep. por número" 
