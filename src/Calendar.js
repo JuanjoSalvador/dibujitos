@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 const endpoint = "https://nyapi.fuken.xyz";
 const List = styled.ul`
@@ -110,7 +111,7 @@ class Calendar extends Component {
             </p>
             {group.animes.map(item => (
               <li key={item.slug + group.day + item.time}>
-                <a href={item.slug}>{item.title}</a>
+                <Link to={item.slug}>{item.title}</Link>
                 <p>{this.formatTime(item.time)}</p>
               </li>
             ))}
